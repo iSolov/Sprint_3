@@ -1,0 +1,5 @@
+client\ScooterOrderApiClient.class
+model\Courier.class
+client\ScooterCourierApiClient.class
+client\BaseHttpClient.class
+model\Order.class
