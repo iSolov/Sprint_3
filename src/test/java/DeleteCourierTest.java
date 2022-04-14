@@ -1,5 +1,4 @@
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.greaterThan;
 
 import client.ScooterCourierApiClient;
 import io.qameta.allure.junit4.DisplayName;
