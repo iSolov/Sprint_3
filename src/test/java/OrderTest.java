@@ -1,8 +1,11 @@
+import client.BaseHttpClient;
 import client.ScooterOrderApiClient;
 
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import model.Order;
 import org.apache.http.HttpStatus;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -14,8 +17,13 @@ import org.junit.runners.Parameterized;
 public class OrderTest {
     private final ScooterOrderApiClient api = new ScooterOrderApiClient();
 
-    private Order order;
-    private Object expectedResponseStatusCode;
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = BaseHttpClient.BASE_URL;
+    }
+
+    private final Order order;
+    private final Object expectedResponseStatusCode;
 
     public OrderTest(Order order, Object expectedResponseStatusCode){
         this.order = order;
@@ -33,7 +41,7 @@ public class OrderTest {
 
     @Test
     @DisplayName("Должна быть возможность сделать заказ с разным набором выбранных цветов")
-    public void shouldMakeOrder() {
+    public void shouldMakeOrderTest() {
         api
             .makeOrder(this.order)
             .then().assertThat().statusCode((int)this.expectedResponseStatusCode);

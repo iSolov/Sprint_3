@@ -1,11 +1,14 @@
 import static org.hamcrest.Matchers.greaterThan;
 
+import client.BaseHttpClient;
 import client.ScooterCourierApiClient;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,12 +17,17 @@ import org.junit.Test;
 public class LoginCourierTest {
     private final ScooterCourierApiClient api = new ScooterCourierApiClient();
 
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = BaseHttpClient.BASE_URL;
+    }
+
     /**
      * Курьер может авторизоваться.
      */
     @Test
     @DisplayName("Курьер должен успешно авторизоваться")
-    public void shouldNewCourierSuccessLogin(){
+    public void shouldNewCourierSuccessLoginTest(){
         Courier randomCourier = Courier.getRandomCourier();
 
         Response registerResponse = api.registerNewCourier(randomCourier);
@@ -41,7 +49,7 @@ public class LoginCourierTest {
      */
     @Test
     @DisplayName("Курьер должен успешно авторизоваться только со всеми обязательными полями")
-    public void shouldLoginCourierWithAllNecessaryFields(){
+    public void shouldLoginCourierWithAllNecessaryFieldsTest(){
         Courier courier = Courier.getRandomCourier();
 
         courier.setFirstName(null);
@@ -65,7 +73,7 @@ public class LoginCourierTest {
      */
     @Test
     @DisplayName("Должна быть ошибка авторизации, если логин не передан")
-    public void shouldGetErrorWhenLoginIsMissed(){
+    public void shouldGetErrorWhenLoginIsMissedTest(){
         Courier courier = Courier.getRandomCourier();
 
         if (api.registerNewCourier(courier).statusCode() != HttpStatus.SC_CREATED){
@@ -87,7 +95,7 @@ public class LoginCourierTest {
      */
     @Test
     @DisplayName("Должна быть ошибка авторизации, если пароль не передан")
-    public void shouldGetErrorWhenPasswordIsMissing(){
+    public void shouldGetErrorWhenPasswordIsMissingTest(){
         Courier courier = Courier.getRandomCourier();
 
         if (api.registerNewCourier(courier).statusCode() != HttpStatus.SC_CREATED){
@@ -109,7 +117,7 @@ public class LoginCourierTest {
      */
     @Test
     @DisplayName("Должна быть ошибка авторизации, если вход под несуществующим логином")
-    public void shouldGetErrorWhenLoginWithNotExistedLogin(){
+    public void shouldGetErrorWhenLoginWithNotExistedLoginTest(){
         Courier courier = Courier.getRandomCourier();
 
         // Создаем курьера. Авторизуемся под ним. Удаляем его. Пытаемся авторизоваться еще раз.
@@ -150,7 +158,7 @@ public class LoginCourierTest {
      */
     @Test
     @DisplayName("Успешная авторизация возвращает идентификатор курьера")
-    public void shouldGetCourierIdWhenSuccessLogin(){
+    public void shouldGetCourierIdWhenSuccessLoginTest(){
         Courier randomCourier = Courier.getRandomCourier();
 
         Response registerResponse = api.registerNewCourier(randomCourier);

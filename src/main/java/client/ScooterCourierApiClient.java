@@ -12,11 +12,6 @@ import org.apache.http.HttpStatus;
 public class ScooterCourierApiClient extends BaseHttpClient {
 
     /**
-     * URL API курьера.
-     */
-    private final String COURIER_API = API_HOST + "/courier";
-
-    /**
      * Создание нового курьера.
      * @param courier Новый курьер.
      * @apiNote 201 Успешное создание учетной записи; 400 Запрос без логина или пароля; 409 Запрос с повторяющимся логином.
@@ -25,7 +20,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post(COURIER_API);
+            .post("/api/v1/courier");
     }
 
     /**
@@ -37,7 +32,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post(COURIER_API + "/login");
+            .post("/api/v1/courier/login");
     }
 
     /**
@@ -48,7 +43,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
     public Response deleteCourier(int id){
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
-            .delete(COURIER_API + "/" + id);
+            .delete("/api/v1/courier/" + id);
     }
 
     /**

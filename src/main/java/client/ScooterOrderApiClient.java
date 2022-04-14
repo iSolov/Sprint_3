@@ -5,12 +5,10 @@ import static io.restassured.RestAssured.given;
 import io.restassured.response.Response;
 import model.Order;
 
-public class ScooterOrderApiClient extends BaseHttpClient {
+import java.util.HashMap;
+import java.util.Map;
 
-    /**
-     * URL API заказов.
-     */
-    private final String ORDERS_API = API_HOST + "/orders";
+public class ScooterOrderApiClient extends BaseHttpClient {
 
     /**
      * Создание заказа.
@@ -23,7 +21,7 @@ public class ScooterOrderApiClient extends BaseHttpClient {
             .and()
             .body(order.toJson())
             .when()
-            .post(ORDERS_API);
+            .post("/api/v1/orders");
     }
 
     /**
@@ -39,7 +37,7 @@ public class ScooterOrderApiClient extends BaseHttpClient {
             .header("Content-type", HEADER_CONTENT_TYPE)
             .queryParam("courierId", courierId)
             .when()
-            .put(ORDERS_API + "/accept/" +  orderId);
+            .put("/api/v1/orders/accept/" +  orderId);
     }
 
     /**
@@ -52,7 +50,7 @@ public class ScooterOrderApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .when()
-            .put(ORDERS_API + "/finish/" + orderId);
+            .put("/api/v1/orders/finish/" + orderId);
     }
 
     /**
@@ -63,7 +61,7 @@ public class ScooterOrderApiClient extends BaseHttpClient {
     public Response getOrderByTrackId(int trackId){
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
-            .get(ORDERS_API + "/track?t="+trackId);
+            .get("/api/v1/orders/track?t="+trackId);
     }
 
     /**
@@ -73,11 +71,14 @@ public class ScooterOrderApiClient extends BaseHttpClient {
      * 409 Заказ уже в работе.
      */
     public Response cancelOrderByTrackId(int trackId){
+        Map<String,Integer> track = new HashMap<>();
+        track.put("track", trackId);
+
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .and()
-            .body("{ \"track\": " + trackId + " }")
-            .put(ORDERS_API + "/cancel");
+            .body(track)
+            .put("/api/v1/orders/cancel");
     }
 
     /**
@@ -96,6 +97,6 @@ public class ScooterOrderApiClient extends BaseHttpClient {
             .queryParam("limit", limit)
             .queryParam("page", page)
             .and()
-            .get(ORDERS_API);
+            .get("/api/v1/orders");
     }
 }

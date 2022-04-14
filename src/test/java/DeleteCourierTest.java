@@ -1,11 +1,14 @@
 import static org.hamcrest.Matchers.equalTo;
 
+import client.BaseHttpClient;
 import client.ScooterCourierApiClient;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -14,12 +17,17 @@ import org.junit.Test;
 public class DeleteCourierTest {
     private final ScooterCourierApiClient api = new ScooterCourierApiClient();
 
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = BaseHttpClient.BASE_URL;
+    }
+
     /**
      * Должна быть возможность удалить курьера.
      */
     @Test
     @DisplayName("Курьер должен удалиться")
-    public void shouldDeleteCourier(){
+    public void shouldDeleteCourierTest(){
         Courier randomCourier = Courier.getRandomCourier();
 
         Response registerResponse = api.registerNewCourier(randomCourier);

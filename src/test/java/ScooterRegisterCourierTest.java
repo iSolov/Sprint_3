@@ -1,12 +1,15 @@
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.greaterThan;
 
+import client.BaseHttpClient;
 import client.ScooterCourierApiClient;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -15,12 +18,17 @@ import org.junit.Test;
 public class ScooterRegisterCourierTest {
     private final ScooterCourierApiClient api = new ScooterCourierApiClient();
 
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = BaseHttpClient.BASE_URL;
+    }
+
     /**
      * Курьера можно создать (возвращается корректный статус и в теле получен результат).
      */
     @Test
     @DisplayName("Должна быть возможность создать курьера")
-    public void shouldRegisterNewCourier(){
+    public void shouldRegisterNewCourierTest(){
         Courier randomCourier = Courier.getRandomCourier();
 
         api
@@ -36,7 +44,7 @@ public class ScooterRegisterCourierTest {
      */
     @Test
     @DisplayName("Нельзя создать двух одинаковых курьеров")
-    public void shouldGetErrorWhenTwoEqualCouriersAreCreated(){
+    public void shouldGetErrorWhenTwoEqualCouriersAreCreatedTest(){
         Courier courier = Courier.getRandomCourier();
 
         boolean isCourierRegistered =
@@ -62,7 +70,7 @@ public class ScooterRegisterCourierTest {
      */
     @Test
     @DisplayName("Чтобы создать курьера, нужно передать в ручку все обязательные поля")
-    public void shouldCreateNewCreateWithOnlyNecessaryFields(){
+    public void shouldCreateNewCreateWithOnlyNecessaryFieldsTest(){
         Courier courierWithoutFirstName = new Courier(Courier.getRandomLogin(), Courier.getRandomPassword());
 
         api
@@ -78,7 +86,7 @@ public class ScooterRegisterCourierTest {
      */
     @Test
     @DisplayName("Должна быть ошибка, если при создании курьера не передан пароль")
-    public void shouldGetErrorWhenRegisterNewCourierWithoutPassword(){
+    public void shouldGetErrorWhenRegisterNewCourierWithoutPasswordTest(){
         Courier courierWithoutPassword = new Courier(Courier.getRandomLogin());
 
         api
@@ -91,7 +99,7 @@ public class ScooterRegisterCourierTest {
      */
     @Test
     @DisplayName("Должна быть ошибка, если создается курьер с существующим именем")
-    public void shouldGetErrorWhenTwoCouriersWithEqualLoginsAreCreated(){
+    public void shouldGetErrorWhenTwoCouriersWithEqualLoginsAreCreatedTest(){
         Courier firstCourier = Courier.getRandomCourier();
 
         boolean isFirstCourierRegistered =

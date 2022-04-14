@@ -1,14 +1,17 @@
 import static org.hamcrest.Matchers.hasSize;
 
+import client.BaseHttpClient;
 import client.ScooterCourierApiClient;
 import client.ScooterOrderApiClient;
 import io.qameta.allure.Step;
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import model.Courier;
 import model.Order;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -17,6 +20,11 @@ import org.junit.Test;
 public class OrderListTest {
     private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
     private final ScooterOrderApiClient apiOrder = new ScooterOrderApiClient();
+
+    @Before
+    public void setUp() {
+        RestAssured.baseURI = BaseHttpClient.BASE_URL;
+    }
 
     @Step("Регистрация нового курьера")
     public Response registerNewCourier(Courier courier){
@@ -68,7 +76,7 @@ public class OrderListTest {
 
     @Test
     @DisplayName("Должна быть возможность получить список заказов по идентификатор курьера")
-    public void shouldGetOrderListByCourierId() {
+    public void shouldGetOrderListByCourierIdTest() {
         Courier courier = Courier.getRandomCourier();
 
         // Создание нового курьера
