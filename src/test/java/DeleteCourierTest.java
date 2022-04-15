@@ -6,13 +6,14 @@ import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * Тест удаления курьера.
  */
 public class DeleteCourierTest {
-    private final ScooterCourierApiClient api = new ScooterCourierApiClient();
+    private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
 
     /**
      * Должна быть возможность удалить курьера.
@@ -22,13 +23,13 @@ public class DeleteCourierTest {
     public void shouldDeleteCourier(){
         Courier randomCourier = Courier.getRandomCourier();
 
-        Response registerResponse = api.registerNewCourier(randomCourier);
+        Response registerResponse = apiCourier.registerNewCourier(randomCourier);
         if (registerResponse.statusCode() != HttpStatus.SC_CREATED){
             Assert.fail("Не удалось создать курьера для проверки.");
             return;
         }
 
-        Response loginCourierResponse = api.loginCourier(randomCourier);
+        Response loginCourierResponse = apiCourier.loginCourier(randomCourier);
 
         if (loginCourierResponse.statusCode() != HttpStatus.SC_OK){
             Assert.fail("Не удалось авторизоваться курьеру.");
@@ -37,9 +38,14 @@ public class DeleteCourierTest {
 
         int id = loginCourierResponse.then().extract().body().path("id");
 
-        api
+        apiCourier
             .deleteCourier(id)
             .then().assertThat().statusCode(HttpStatus.SC_OK)
             .and().assertThat().body("ok", equalTo(true));
+    }
+
+    @Before
+    public void beforeTest(){
+        apiCourier.clearCreatedCouriers();
     }
 }

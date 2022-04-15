@@ -9,6 +9,7 @@ import model.Courier;
 import model.Order;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -59,11 +60,6 @@ public class OrderListTest {
     @Step("Получение списка заказов по курьеру")
     public Response getOrderListByCourierId(int courierId){
         return apiOrder.getOrderList(courierId, null, null, null);
-    }
-
-    @Step("Удаление информации о курьере")
-    public void clearCourierInfo(Courier courier){
-        apiCourier.clearCourierInfo(courier);
     }
 
     @Test
@@ -122,8 +118,10 @@ public class OrderListTest {
         getOrderListByCourierId(courierId)
             .then().assertThat().body("orders", hasSize(2))
             .and().statusCode(HttpStatus.SC_OK);
+    }
 
-        // Удаление созданного курьера
-        clearCourierInfo(courier);
+    @Before
+    public void beforeTest(){
+        apiCourier.clearCreatedCouriers();
     }
 }

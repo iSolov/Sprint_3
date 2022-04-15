@@ -63,7 +63,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
      * Очистить информацию о курьере.
      * @param courier Курьер.
      */
-    public void clearCourierInfo(Courier courier){
+    private void clearCourierInfo(Courier courier){
         Response loginResponse = loginCourier(courier);
         if (loginResponse.statusCode() == HttpStatus.SC_OK){ // Успешный логин
             int id = loginResponse.then().extract().body().path("id");
