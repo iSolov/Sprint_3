@@ -3,6 +3,7 @@ package client;
 import static io.restassured.RestAssured.*;
 
 import io.restassured.response.Response;
+import java.util.ArrayList;
 import model.Courier;
 import org.apache.http.HttpStatus;
 
@@ -17,11 +18,18 @@ public class ScooterCourierApiClient extends BaseHttpClient {
     private final String COURIER_API = API_HOST + "/courier";
 
     /**
+     * Создаваемые курьеры с помощью API.
+     */
+    private ArrayList<Courier> createdCouriers = new ArrayList<>();
+
+    /**
      * Создание нового курьера.
      * @param courier Новый курьер.
      * @apiNote 201 Успешное создание учетной записи; 400 Запрос без логина или пароля; 409 Запрос с повторяющимся логином.
      */
     public Response registerNewCourier(Courier courier){
+        createdCouriers.add(courier);
+
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
@@ -61,6 +69,15 @@ public class ScooterCourierApiClient extends BaseHttpClient {
             int id = loginResponse.then().extract().body().path("id");
 
             deleteCourier(id);
+        }
+    }
+
+    /**
+     * Удаляет курьеров, созданных во время теста.
+     */
+    public void clearCreatedCouriers(){
+        for (int i = 0; i < createdCouriers.size(); i++) {
+            clearCourierInfo(createdCouriers.get(i));
         }
     }
 }

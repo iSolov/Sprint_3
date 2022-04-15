@@ -6,6 +6,7 @@ import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -28,8 +29,6 @@ public class LoginCourierTest {
                 .loginCourier(randomCourier)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .and().body("id", greaterThan(0)); // Успешный логин
-
-            api.clearCourierInfo(randomCourier);
         }
         else{
             Assert.fail("Не удалось создать курьера для проверки.");
@@ -165,5 +164,10 @@ public class LoginCourierTest {
             .and().statusCode(HttpStatus.SC_OK);
 
         api.clearCourierInfo(randomCourier);
+    }
+
+    @Before
+    public void beforeTest(){
+        api.clearCreatedCouriers();
     }
 }

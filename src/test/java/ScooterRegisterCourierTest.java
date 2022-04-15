@@ -8,6 +8,7 @@ import model.Courier;
 import org.apache.http.HttpStatus;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runners.Parameterized.AfterParam;
 
 /**
  * Тест регистрации курьера.
@@ -115,4 +116,5 @@ public class ScooterRegisterCourierTest {
         api.clearCourierInfo(firstCourier);
         api.clearCourierInfo(secondCourier);
     }
+
 }
