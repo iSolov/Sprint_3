@@ -61,7 +61,8 @@ public class ScooterOrderApiClient extends BaseHttpClient {
     public Response getOrderByTrackId(int trackId){
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
-            .get("/api/v1/orders/track?t="+trackId);
+            .queryParam("t", trackId)
+            .get("/api/v1/orders/track");
     }
 
     /**
