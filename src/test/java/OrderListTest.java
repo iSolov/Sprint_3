@@ -21,108 +21,64 @@ public class OrderListTest {
     private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
     private final ScooterOrderApiClient apiOrder = new ScooterOrderApiClient();
 
+    private final OrderListStepsTest steps = new OrderListStepsTest(apiCourier, apiOrder);
+
     @Before
     public void setUp() {
         RestAssured.baseURI = BaseHttpClient.BASE_URL;
     }
 
-    @Step("Регистрация нового курьера")
-    public Response registerNewCourier(Courier courier){
-        return apiCourier.registerNewCourier(courier);
-    }
+    /**
+     * Подготовка курьера.
+     * @return Идентификатор курьера.
+     */
+    private int prepareCourier(){
+        Courier courier = Courier.getRandomCourier();
 
-    @Step("Авторизация курьера")
-    public Response loginCourier(Courier courier){
-        return apiCourier.loginCourier(courier);
-    }
+        // Создание нового курьера
+        steps.registerNewCourier(courier);
 
-    @Step("Создание заказа")
-    public Response makeOrder(Order order){
-        return apiOrder.makeOrder(Order.getMockOrderWithTwoColors());
-    }
-
-    @Step("Получение заказа по треку")
-    public Response getOrderByTrackId(int trackId){
-        return apiOrder.getOrderByTrackId(trackId);
-    }
-
-    @Step("Подтверждение заказа")
-    public boolean acceptOrder(int orderId, int courierId){
+        // Авторизация нового курьера
         return
-            apiOrder
-                .acceptOrder(orderId, courierId)
-                .then().statusCode(HttpStatus.SC_OK)
-                .and().extract().body().path("ok");
+            steps.loginCourier(courier)
+            .then().extract().body().path("id");
     }
 
-    @Step("Завершение заказа")
-    public boolean finishOrder(int orderId){
-        return
-            apiOrder
-                .finishOrder(orderId)
-                .then().statusCode(HttpStatus.SC_OK)
-                .and().extract().body().path("ok");
-    }
+    /**
+     * Подготовка заказа.
+     * @param courierId Идентификатор курьера.
+     */
+    private void prepareOrderByCourierId(int courierId){
+        // Создание нового заказа
+        int trackId =
+            steps
+                .makeOrder(Order.getMockOrderWithTwoColors())
+                .then().extract().body().path("track");
 
-    @Step("Получение списка заказов по курьеру")
-    public Response getOrderListByCourierId(int courierId){
-        return apiOrder.getOrderList(courierId, null, null, null);
+        // Получение заказа по треку
+        int orderId =
+            steps
+                .getOrderByTrackId(trackId)
+                .then().extract().body().path("order.id");
+
+        // Подтверждение заказа
+        steps.acceptOrder(orderId, courierId);
+
+        // Завершение заказа
+        steps.finishOrder(orderId);
     }
 
     @Test
     @DisplayName("Должна быть возможность получить список заказов по идентификатор курьера")
     public void shouldGetOrderListByCourierIdTest() {
-        Courier courier = Courier.getRandomCourier();
+        // Подготовка курьера.
+        int courierId = prepareCourier();
 
-        // Создание нового курьера
-        Response registerNewCourierResponse = registerNewCourier(courier);
-        if (registerNewCourierResponse.statusCode() != HttpStatus.SC_CREATED){
-            Assert.fail("Не удалось создать курьера для проверки.");
-            return;
-        }
-
-        // Авторизация нового курьера
-        Response loginCourierResponse = loginCourier(courier);
-        if (loginCourierResponse.statusCode() != HttpStatus.SC_OK){
-            Assert.fail("Не удалось залогиниться курьеру.");
-            return;
-        }
-        int courierId = loginCourierResponse.then().extract().body().path("id");
-
-        // Создание нового заказа
-        Response makeOrderResponse = makeOrder(Order.getMockOrderWithTwoColors());
-        if (makeOrderResponse.statusCode() != HttpStatus.SC_CREATED){
-            Assert.fail("Не удалось создать заказ.");
-            return;
-        }
-        int trackId = makeOrderResponse.then().extract().body().path("track");
-
-        // Получение заказа по треку
-        Response getOrderByTrackIdResponse = getOrderByTrackId(trackId);
-        if (getOrderByTrackIdResponse.statusCode() != HttpStatus.SC_OK){
-            Assert.fail("Не удалось получить заказ по треку.");
-            return;
-        }
-        int orderId = getOrderByTrackIdResponse.then().extract().body().path("order.id");
-
-        // Подтверждение заказа
-        boolean isAccepted = acceptOrder(orderId, courierId);
-
-        if (!isAccepted){
-            Assert.fail("Не удалось подтвердить заказ.");
-            return;
-        }
-
-        // Завершение заказа
-        boolean isFinished = finishOrder(orderId);
-
-        if (!isFinished){
-            Assert.fail("Не удалось завершить заказ.");
-            return;
-        }
+        // Подготовка заказа.
+        prepareOrderByCourierId(courierId);
 
         // Получение списка заказов
-        getOrderListByCourierId(courierId)
+        steps.getOrderListByCourierId(courierId)
             .then().assertThat().body("orders", hasSize(2))
             .and().statusCode(HttpStatus.SC_OK);
     }

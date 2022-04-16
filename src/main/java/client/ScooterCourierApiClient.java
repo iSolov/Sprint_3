@@ -11,16 +11,10 @@ import org.apache.http.HttpStatus;
  * Клиент для обращения к API курьера.
  */
 public class ScooterCourierApiClient extends BaseHttpClient {
-
-    /**
-     * URL API курьера.
-     */
-    private final String COURIER_API = API_HOST + "/courier";
-
     /**
      * Создаваемые курьеры с помощью API.
      */
-    private ArrayList<Courier> createdCouriers = new ArrayList<>();
+    private final ArrayList<Courier> createdCouriers = new ArrayList<>();
 
     /**
      * Создание нового курьера.
@@ -33,7 +27,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post(COURIER_API);
+            .post("/api/v1/courier");
     }
 
     /**
@@ -45,7 +39,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post(COURIER_API + "/login");
+            .post("/api/v1/courier/login");
     }
 
     /**
@@ -56,7 +50,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
     public Response deleteCourier(int id){
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
-            .delete(COURIER_API + "/" + id);
+            .delete("/api/v1/courier/" + id);
     }
 
     /**
@@ -76,8 +70,6 @@ public class ScooterCourierApiClient extends BaseHttpClient {
      * Удаляет курьеров, созданных во время теста.
      */
     public void clearCreatedCouriers(){
-        for (int i = 0; i < createdCouriers.size(); i++) {
-            clearCourierInfo(createdCouriers.get(i));
-        }
+        createdCouriers.forEach(this::clearCourierInfo);
     }
 }
