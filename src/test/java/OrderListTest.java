@@ -69,11 +69,6 @@ public class OrderListTest {
         return apiOrder.getOrderList(courierId, null, null, null);
     }
 
-    @Step("Удаление информации о курьере")
-    public void clearCourierInfo(Courier courier){
-        apiCourier.clearCourierInfo(courier);
-    }
-
     @Test
     @DisplayName("Должна быть возможность получить список заказов по идентификатор курьера")
     public void shouldGetOrderListByCourierIdTest() {
@@ -130,8 +125,10 @@ public class OrderListTest {
         getOrderListByCourierId(courierId)
             .then().assertThat().body("orders", hasSize(2))
             .and().statusCode(HttpStatus.SC_OK);
+    }
 
-        // Удаление созданного курьера
-        clearCourierInfo(courier);
+    @Before
+    public void beforeTest(){
+        apiCourier.clearCreatedCouriers();
     }
 }

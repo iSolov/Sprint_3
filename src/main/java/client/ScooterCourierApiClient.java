@@ -3,6 +3,7 @@ package client;
 import static io.restassured.RestAssured.*;
 
 import io.restassured.response.Response;
+import java.util.ArrayList;
 import model.Courier;
 import org.apache.http.HttpStatus;
 
@@ -12,15 +13,27 @@ import org.apache.http.HttpStatus;
 public class ScooterCourierApiClient extends BaseHttpClient {
 
     /**
+     * URL API курьера.
+     */
+    private final String COURIER_API = API_HOST + "/courier";
+
+    /**
+     * Создаваемые курьеры с помощью API.
+     */
+    private ArrayList<Courier> createdCouriers = new ArrayList<>();
+
+    /**
      * Создание нового курьера.
      * @param courier Новый курьер.
      * @apiNote 201 Успешное создание учетной записи; 400 Запрос без логина или пароля; 409 Запрос с повторяющимся логином.
      */
     public Response registerNewCourier(Courier courier){
+        createdCouriers.add(courier);
+
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post("/api/v1/courier");
+            .post(COURIER_API);
     }
 
     /**
@@ -32,7 +45,7 @@ public class ScooterCourierApiClient extends BaseHttpClient {
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
             .body(Courier.toJson(courier))
-            .post("/api/v1/courier/login");
+            .post(COURIER_API + "/login");
     }
 
     /**
@@ -43,19 +56,28 @@ public class ScooterCourierApiClient extends BaseHttpClient {
     public Response deleteCourier(int id){
         return given()
             .header("Content-type", HEADER_CONTENT_TYPE)
-            .delete("/api/v1/courier/" + id);
+            .delete(COURIER_API + "/" + id);
     }
 
     /**
      * Очистить информацию о курьере.
      * @param courier Курьер.
      */
-    public void clearCourierInfo(Courier courier){
+    private void clearCourierInfo(Courier courier){
         Response loginResponse = loginCourier(courier);
         if (loginResponse.statusCode() == HttpStatus.SC_OK){ // Успешный логин
             int id = loginResponse.then().extract().body().path("id");
 
             deleteCourier(id);
+        }
+    }
+
+    /**
+     * Удаляет курьеров, созданных во время теста.
+     */
+    public void clearCreatedCouriers(){
+        for (int i = 0; i < createdCouriers.size(); i++) {
+            clearCourierInfo(createdCouriers.get(i));
         }
     }
 }
