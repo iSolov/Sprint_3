@@ -12,7 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * РўРµСЃС‚ СѓРґР°Р»РµРЅРёСЏ РєСѓСЂСЊРµСЂР°.
+ * Тест удаления курьера.
  */
 public class DeleteCourierTest {
     private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
@@ -23,23 +23,23 @@ public class DeleteCourierTest {
     }
 
     /**
-     * Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СѓРґР°Р»РёС‚СЊ РєСѓСЂСЊРµСЂР°.
+     * Должна быть возможность удалить курьера.
      */
     @Test
-    @DisplayName("РљСѓСЂСЊРµСЂ РґРѕР»Р¶РµРЅ СѓРґР°Р»РёС‚СЊСЃСЏ")
+    @DisplayName("Курьер должен удалиться")
     public void shouldDeleteCourierTest(){
         Courier randomCourier = Courier.getRandomCourier();
 
         Response registerResponse = apiCourier.registerNewCourier(randomCourier);
         if (registerResponse.statusCode() != HttpStatus.SC_CREATED){
-            Assert.fail("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР° РґР»СЏ РїСЂРѕРІРµСЂРєРё.");
+            Assert.fail("Не удалось создать курьера для проверки.");
             return;
         }
 
         Response loginCourierResponse = apiCourier.loginCourier(randomCourier);
 
         if (loginCourierResponse.statusCode() != HttpStatus.SC_OK){
-            Assert.fail("РќРµ СѓРґР°Р»РѕСЃСЊ Р°РІС‚РѕСЂРёР·РѕРІР°С‚СЊСЃСЏ РєСѓСЂСЊРµСЂСѓ.");
+            Assert.fail("Не удалось авторизоваться курьеру.");
             return;
         }
 
