@@ -10,6 +10,7 @@ import io.restassured.response.Response;
 import model.Courier;
 import model.Order;
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -83,8 +84,8 @@ public class OrderListTest {
             .and().statusCode(HttpStatus.SC_OK);
     }
 
-    @Before
-    public void beforeTest(){
+    @After
+    public void afterTest(){
         apiCourier.clearCreatedCouriers();
     }
 }

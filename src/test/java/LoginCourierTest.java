@@ -7,6 +7,7 @@ import io.restassured.RestAssured;
 import io.restassured.response.Response;
 import model.Courier;
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -166,8 +167,8 @@ public class LoginCourierTest {
             .and().statusCode(HttpStatus.SC_OK);
     }
 
-    @Before
-    public void beforeTest(){
+    @After
+    public void afterTest(){
         apiCourier.clearCreatedCouriers();
     }
 }

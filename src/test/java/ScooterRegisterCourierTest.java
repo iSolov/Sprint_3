@@ -4,6 +4,7 @@ import client.ScooterCourierApiClient;
 import io.qameta.allure.junit4.DisplayName;
 import model.Courier;
 import org.apache.http.HttpStatus;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -106,9 +107,8 @@ public class ScooterRegisterCourierTest {
             .then().assertThat().statusCode(HttpStatus.SC_CONFLICT); // Запрос с повторяющимся логином
     }
 
-
-    @Before
-    public void beforeTest(){
+    @After
+    public void afterTest(){
         apiCourier.clearCreatedCouriers();
     }
 }
