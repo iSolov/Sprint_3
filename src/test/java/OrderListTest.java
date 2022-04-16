@@ -16,7 +16,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Тест списка заказов.
+ * РўРµСЃС‚ СЃРїРёСЃРєР° Р·Р°РєР°Р·РѕРІ.
  */
 public class OrderListTest {
     private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
@@ -30,55 +30,55 @@ public class OrderListTest {
     }
 
     /**
-     * Подготовка курьера.
-     * @return Идентификатор курьера.
+     * РџРѕРґРіРѕС‚РѕРІРєР° РєСѓСЂСЊРµСЂР°.
+     * @return РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєСѓСЂСЊРµСЂР°.
      */
     private int prepareCourier(){
         Courier courier = Courier.getRandomCourier();
 
-        // Создание нового курьера
+        // РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ РєСѓСЂСЊРµСЂР°
         steps.registerNewCourier(courier);
 
-        // Авторизация нового курьера
+        // РђРІС‚РѕСЂРёР·Р°С†РёСЏ РЅРѕРІРѕРіРѕ РєСѓСЂСЊРµСЂР°
         return
             steps.loginCourier(courier)
             .then().extract().body().path("id");
     }
 
     /**
-     * Подготовка заказа.
-     * @param courierId Идентификатор курьера.
+     * РџРѕРґРіРѕС‚РѕРІРєР° Р·Р°РєР°Р·Р°.
+     * @param courierId РРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєСѓСЂСЊРµСЂР°.
      */
     private void prepareOrderByCourierId(int courierId){
-        // Создание нового заказа
+        // РЎРѕР·РґР°РЅРёРµ РЅРѕРІРѕРіРѕ Р·Р°РєР°Р·Р°
         int trackId =
             steps
                 .makeOrder(Order.getMockOrderWithTwoColors())
                 .then().extract().body().path("track");
 
-        // Получение заказа по треку
+        // РџРѕР»СѓС‡РµРЅРёРµ Р·Р°РєР°Р·Р° РїРѕ С‚СЂРµРєСѓ
         int orderId =
             steps
                 .getOrderByTrackId(trackId)
                 .then().extract().body().path("order.id");
 
-        // Подтверждение заказа
+        // РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Р·Р°РєР°Р·Р°
         steps.acceptOrder(orderId, courierId);
 
-        // Завершение заказа
+        // Р—Р°РІРµСЂС€РµРЅРёРµ Р·Р°РєР°Р·Р°
         steps.finishOrder(orderId);
     }
 
     @Test
-    @DisplayName("Должна быть возможность получить список заказов по идентификатор курьера")
+    @DisplayName("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ РїРѕР»СѓС‡РёС‚СЊ СЃРїРёСЃРѕРє Р·Р°РєР°Р·РѕРІ РїРѕ РёРґРµРЅС‚РёС„РёРєР°С‚РѕСЂ РєСѓСЂСЊРµСЂР°")
     public void shouldGetOrderListByCourierIdTest() {
-        // Подготовка курьера.
+        // РџРѕРґРіРѕС‚РѕРІРєР° РєСѓСЂСЊРµСЂР°.
         int courierId = prepareCourier();
 
-        // Подготовка заказа.
+        // РџРѕРґРіРѕС‚РѕРІРєР° Р·Р°РєР°Р·Р°.
         prepareOrderByCourierId(courierId);
 
-        // Получение списка заказов
+        // РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° Р·Р°РєР°Р·РѕРІ
         steps.getOrderListByCourierId(courierId)
             .then().assertThat().body("orders", hasSize(2))
             .and().statusCode(HttpStatus.SC_OK);

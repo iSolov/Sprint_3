@@ -10,30 +10,30 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * Тест регистрации курьера.
+ * РўРµСЃС‚ СЂРµРіРёСЃС‚СЂР°С†РёРё РєСѓСЂСЊРµСЂР°.
  */
 public class ScooterRegisterCourierTest {
     private final ScooterCourierApiClient apiCourier = new ScooterCourierApiClient();
 
     /**
-     * Курьера можно создать (возвращается корректный статус и в теле получен результат).
+     * РљСѓСЂСЊРµСЂР° РјРѕР¶РЅРѕ СЃРѕР·РґР°С‚СЊ (РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РєРѕСЂСЂРµРєС‚РЅС‹Р№ СЃС‚Р°С‚СѓСЃ Рё РІ С‚РµР»Рµ РїРѕР»СѓС‡РµРЅ СЂРµР·СѓР»СЊС‚Р°С‚).
      */
     @Test
-    @DisplayName("Должна быть возможность создать курьера")
+    @DisplayName("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР°")
     public void shouldRegisterNewCourier(){
         Courier randomCourier = Courier.getRandomCourier();
 
         apiCourier
             .registerNewCourier(randomCourier)
             .then().assertThat().body("ok", equalTo(true))
-            .and().assertThat().statusCode(HttpStatus.SC_CREATED); // Успешное создание учетной записи
+            .and().assertThat().statusCode(HttpStatus.SC_CREATED); // РЈСЃРїРµС€РЅРѕРµ СЃРѕР·РґР°РЅРёРµ СѓС‡РµС‚РЅРѕР№ Р·Р°РїРёСЃРё
     }
 
     /**
-     * Нельзя создать двух одинаковых курьеров.
+     * РќРµР»СЊР·СЏ СЃРѕР·РґР°С‚СЊ РґРІСѓС… РѕРґРёРЅР°РєРѕРІС‹С… РєСѓСЂСЊРµСЂРѕРІ.
      */
     @Test
-    @DisplayName("Нельзя создать двух одинаковых курьеров")
+    @DisplayName("РќРµР»СЊР·СЏ СЃРѕР·РґР°С‚СЊ РґРІСѓС… РѕРґРёРЅР°РєРѕРІС‹С… РєСѓСЂСЊРµСЂРѕРІ")
     public void shouldGetErrorWhenTwoEqualCouriersAreCreated(){
         Courier courier = Courier.getRandomCourier();
 
@@ -44,20 +44,20 @@ public class ScooterRegisterCourierTest {
                 .and().extract().body().path("ok");
 
         if (!isCourierRegistered){
-            Assert.fail("Не удалось создать курьера для проверки.");
+            Assert.fail("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР° РґР»СЏ РїСЂРѕРІРµСЂРєРё.");
             return;
         }
 
         apiCourier
             .registerNewCourier(courier)
-            .then().assertThat().statusCode(HttpStatus.SC_CONFLICT); // Запрос с повторяющимся логином
+            .then().assertThat().statusCode(HttpStatus.SC_CONFLICT); // Р—Р°РїСЂРѕСЃ СЃ РїРѕРІС‚РѕСЂСЏСЋС‰РёРјСЃСЏ Р»РѕРіРёРЅРѕРј
     }
 
     /**
-     * Чтобы создать курьера, нужно передать в ручку все обязательные поля.
+     * Р§С‚РѕР±С‹ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР°, РЅСѓР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РІ СЂСѓС‡РєСѓ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ.
      */
     @Test
-    @DisplayName("Чтобы создать курьера, нужно передать в ручку все обязательные поля")
+    @DisplayName("Р§С‚РѕР±С‹ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР°, РЅСѓР¶РЅРѕ РїРµСЂРµРґР°С‚СЊ РІ СЂСѓС‡РєСѓ РІСЃРµ РѕР±СЏР·Р°С‚РµР»СЊРЅС‹Рµ РїРѕР»СЏ")
     public void shouldCreateNewCreateWithOnlyNecessaryFields(){
         Courier courierWithoutFirstName = new Courier(Courier.getRandomLogin(), Courier.getRandomPassword());
 
@@ -68,23 +68,23 @@ public class ScooterRegisterCourierTest {
     }
 
     /**
-     * Если одного из полей нет, запрос возвращает ошибку.
+     * Р•СЃР»Рё РѕРґРЅРѕРіРѕ РёР· РїРѕР»РµР№ РЅРµС‚, Р·Р°РїСЂРѕСЃ РІРѕР·РІСЂР°С‰Р°РµС‚ РѕС€РёР±РєСѓ.
      */
     @Test
-    @DisplayName("Должна быть ошибка, если при создании курьера не передан пароль")
+    @DisplayName("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РѕС€РёР±РєР°, РµСЃР»Рё РїСЂРё СЃРѕР·РґР°РЅРёРё РєСѓСЂСЊРµСЂР° РЅРµ РїРµСЂРµРґР°РЅ РїР°СЂРѕР»СЊ")
     public void shouldGetErrorWhenRegisterNewCourierWithoutPassword(){
         Courier courierWithoutPassword = new Courier(Courier.getRandomLogin());
 
         apiCourier
             .registerNewCourier(courierWithoutPassword)
-            .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST); // Запрос без логина или пароля
+            .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST); // Р—Р°РїСЂРѕСЃ Р±РµР· Р»РѕРіРёРЅР° РёР»Рё РїР°СЂРѕР»СЏ
     }
 
     /**
-     * Если создать пользователя с логином, который уже есть, возвращается ошибка.
+     * Р•СЃР»Рё СЃРѕР·РґР°С‚СЊ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ СЃ Р»РѕРіРёРЅРѕРј, РєРѕС‚РѕСЂС‹Р№ СѓР¶Рµ РµСЃС‚СЊ, РІРѕР·РІСЂР°С‰Р°РµС‚СЃСЏ РѕС€РёР±РєР°.
      */
     @Test
-    @DisplayName("Должна быть ошибка, если создается курьер с существующим именем")
+    @DisplayName("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РѕС€РёР±РєР°, РµСЃР»Рё СЃРѕР·РґР°РµС‚СЃСЏ РєСѓСЂСЊРµСЂ СЃ СЃСѓС‰РµСЃС‚РІСѓСЋС‰РёРј РёРјРµРЅРµРј")
     public void shouldGetErrorWhenTwoCouriersWithEqualLoginsAreCreated(){
         Courier firstCourier = Courier.getRandomCourier();
 
@@ -95,7 +95,7 @@ public class ScooterRegisterCourierTest {
                 .and().extract().body().path("ok");
 
         if (!isFirstCourierRegistered){
-            Assert.fail("Не удалось создать курьера для проверки.");
+            Assert.fail("РќРµ СѓРґР°Р»РѕСЃСЊ СЃРѕР·РґР°С‚СЊ РєСѓСЂСЊРµСЂР° РґР»СЏ РїСЂРѕРІРµСЂРєРё.");
             return;
         }
 
@@ -104,7 +104,7 @@ public class ScooterRegisterCourierTest {
 
         apiCourier
             .registerNewCourier(secondCourier)
-            .then().assertThat().statusCode(HttpStatus.SC_CONFLICT); // Запрос с повторяющимся логином
+            .then().assertThat().statusCode(HttpStatus.SC_CONFLICT); // Р—Р°РїСЂРѕСЃ СЃ РїРѕРІС‚РѕСЂСЏСЋС‰РёРјСЃСЏ Р»РѕРіРёРЅРѕРј
     }
 
     @After

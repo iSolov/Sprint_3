@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
 /**
- * Тест заказа.
+ * РўРµСЃС‚ Р·Р°РєР°Р·Р°.
  */
 @RunWith(Parameterized.class)
 public class OrderTest {
@@ -33,14 +33,14 @@ public class OrderTest {
     @Parameterized.Parameters
     public static Object[][] getColorsData() {
         return new Object[][]{
-            { Order.getMockOrderWithoutColor(), HttpStatus.SC_CREATED }, // можно совсем не указывать цвет
-            { Order.getMockOrderWithBlackColor(), HttpStatus.SC_CREATED }, // можно указать один из цветов — BLACK или GREY
-            { Order.getMockOrderWithTwoColors(), HttpStatus.SC_CREATED } // можно указать оба цвета
+            { Order.getMockOrderWithoutColor(), HttpStatus.SC_CREATED }, // РјРѕР¶РЅРѕ СЃРѕРІСЃРµРј РЅРµ СѓРєР°Р·С‹РІР°С‚СЊ С†РІРµС‚
+            { Order.getMockOrderWithBlackColor(), HttpStatus.SC_CREATED }, // РјРѕР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ РѕРґРёРЅ РёР· С†РІРµС‚РѕРІ вЂ” BLACK РёР»Рё GREY
+            { Order.getMockOrderWithTwoColors(), HttpStatus.SC_CREATED } // РјРѕР¶РЅРѕ СѓРєР°Р·Р°С‚СЊ РѕР±Р° С†РІРµС‚Р°
         };
     }
 
     @Test
-    @DisplayName("Должна быть возможность сделать заказ с разным набором выбранных цветов")
+    @DisplayName("Р”РѕР»Р¶РЅР° Р±С‹С‚СЊ РІРѕР·РјРѕР¶РЅРѕСЃС‚СЊ СЃРґРµР»Р°С‚СЊ Р·Р°РєР°Р· СЃ СЂР°Р·РЅС‹Рј РЅР°Р±РѕСЂРѕРј РІС‹Р±СЂР°РЅРЅС‹С… С†РІРµС‚РѕРІ")
     public void shouldMakeOrderTest() {
         api
             .makeOrder(this.order)

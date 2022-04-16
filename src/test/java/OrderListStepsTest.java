@@ -15,7 +15,7 @@ import org.junit.Test;
 import static org.hamcrest.Matchers.hasSize;
 
 /**
- * Шаги для теста списка заказов.
+ * РЁР°РіРё РґР»СЏ С‚РµСЃС‚Р° СЃРїРёСЃРєР° Р·Р°РєР°Р·РѕРІ.
  */
 public class OrderListStepsTest {
     private final ScooterCourierApiClient apiCourier;
@@ -26,37 +26,37 @@ public class OrderListStepsTest {
         this.apiOrder = apiOrder;
     }
 
-    @Step("Регистрация нового курьера")
+    @Step("Р РµРіРёСЃС‚СЂР°С†РёСЏ РЅРѕРІРѕРіРѕ РєСѓСЂСЊРµСЂР°")
     public void registerNewCourier(Courier courier){
         apiCourier.registerNewCourier(courier);
     }
 
-    @Step("Авторизация курьера")
+    @Step("РђРІС‚РѕСЂРёР·Р°С†РёСЏ РєСѓСЂСЊРµСЂР°")
     public Response loginCourier(Courier courier){
         return apiCourier.loginCourier(courier);
     }
 
-    @Step("Создание заказа")
+    @Step("РЎРѕР·РґР°РЅРёРµ Р·Р°РєР°Р·Р°")
     public Response makeOrder(Order order){
         return apiOrder.makeOrder(order);
     }
 
-    @Step("Получение заказа по треку")
+    @Step("РџРѕР»СѓС‡РµРЅРёРµ Р·Р°РєР°Р·Р° РїРѕ С‚СЂРµРєСѓ")
     public Response getOrderByTrackId(int trackId){
         return apiOrder.getOrderByTrackId(trackId);
     }
 
-    @Step("Подтверждение заказа")
+    @Step("РџРѕРґС‚РІРµСЂР¶РґРµРЅРёРµ Р·Р°РєР°Р·Р°")
     public void acceptOrder(int orderId, int courierId){
         apiOrder.acceptOrder(orderId, courierId);
     }
 
-    @Step("Завершение заказа")
+    @Step("Р—Р°РІРµСЂС€РµРЅРёРµ Р·Р°РєР°Р·Р°")
     public void finishOrder(int orderId){
         apiOrder.finishOrder(orderId);
     }
 
-    @Step("Получение списка заказов по курьеру")
+    @Step("РџРѕР»СѓС‡РµРЅРёРµ СЃРїРёСЃРєР° Р·Р°РєР°Р·РѕРІ РїРѕ РєСѓСЂСЊРµСЂСѓ")
     public Response getOrderListByCourierId(int courierId){
         return apiOrder.getOrderList(courierId, null, null, null);
     }
